@@ -45,6 +45,16 @@ public class Grid : MonoBehaviour
         RefreshAllPositions();
     }
 
+    //gridobj reference
+    private void RefrenshGrid() 
+    {
+        allGridObjects.Clear();
+        allPositions.Clear();
+        GridObject[] gridObjs = FindObjectOfType<GridObject>();
+
+    
+    }
+
     void RefreshAllPositions()
     {
         // delete old coordinates if updated
