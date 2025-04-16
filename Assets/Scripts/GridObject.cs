@@ -60,6 +60,10 @@ public class GridObject: MonoBehaviour
 
         // set position & keep Z axis
         transform.position = new Vector3(snappedPos.x, snappedPos.y, transform.position.z);
+
+        float x = Grid.Instance.TopLeft.x + Grid.Instance.cellWidth * (gridPosition.x - 0.5f);
+        float y = Grid.Instance.TopLeft.y - Grid.Instance.cellWidth * (gridPosition.y - 0.5f);
+        this.transform.position = new Vector3(x, y, 0);
     }
     // object coordinate (x, y)
 }
