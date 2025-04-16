@@ -2,42 +2,59 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public float characterSpeed = 5f;       // Movement speed
+    public float smoothTime = 0.1f;         // Smoothing time for SmoothDamp
 
-    public float characterSpeed = 5.0f; // Speed of Wilmot
+    private Vector2 targetPosition;         // Target position to move toward
+    private Vector2 velocity = Vector2.zero; // Velocity reference for smoothing
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-
+        // Set initial target position to current position
+        targetPosition = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        //detect input, movementInput can be used for animation later
-        Vector2 movementInput = new Vector2(0, 0);
+        // Get input direction from keys (WASD)
+        Vector2 inputDirection = GetMovementInput();
 
-        if (Input.GetKey(KeyCode.W))
+        // Only update target position if input is pressed
+        if (inputDirection != Vector2.zero)
         {
-            this.transform.position += new Vector3(0, characterSpeed * Time.deltaTime, 0);
-            movementInput.y = 1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            this.transform.position += new Vector3(0, -characterSpeed * Time.deltaTime, 0);
-            movementInput.y = -1;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            this.transform.position += new Vector3(-characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = -1;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            this.transform.position += new Vector3(characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = 1;
+            Move(inputDirection);
         }
 
-        // to be add: If the player is moving, play the walking animation
+        // Smoothly move the character toward the target position
+        Vector2 currentPosition = transform.position;
+        Vector2 newPosition = Vector2.SmoothDamp(currentPosition, targetPosition, ref velocity, smoothTime);
+        transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+    }
+
+    // Calculates the movement input direction
+    public Vector2 GetMovementInput()
+    {
+        Vector2 movementInput = Vector2.zero;
+
+        if (Input.GetKey(KeyCode.W)) movementInput.y += 1;
+        if (Input.GetKey(KeyCode.S)) movementInput.y -= 1;
+        if (Input.GetKey(KeyCode.A)) movementInput.x -= 1;
+        if (Input.GetKey(KeyCode.D)) movementInput.x += 1;
+
+        return movementInput.normalized;
+    }
+
+    // Updates the target position based on input
+    public void Move(Vector2 inputDirection)
+    {
+        // Calculate the next target position
+        targetPosition += inputDirection * characterSpeed * Time.deltaTime;
+    }
+
+    // Checks if any movement key was released
+    public bool CheckKeyRelease()
+    {
+        return Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) ||
+               Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D);
     }
 }
