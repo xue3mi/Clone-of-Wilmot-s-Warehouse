@@ -40,9 +40,25 @@ public class Grid : MonoBehaviour
         {
             // if not added into list, add for the first time
             allGridObjects.Add(gridObject);
+            allPositions.Add(gridObject.gridPosition);
         }
-        // Every update, refresh the coordinate list
-        RefreshAllPositions();
+        
+       
+    }
+
+    //gridobj reference
+    private void RefrenshGrid(GridObject gridObject) 
+    {
+        allGridObjects.Clear();
+        allPositions.Clear();
+        GridObject[] foundObjects = FindObjectsByType<GridObject>(
+            FindObjectsInactive.Exclude,   // 不包括未激活的物体，按需可改成 Include
+            FindObjectsSortMode.InstanceID      // 不排序，性能更高
+        );
+
+        allGridObjects.AddRange(foundObjects);
+
+
     }
 
     void RefreshAllPositions()

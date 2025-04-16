@@ -2,42 +2,37 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    
+    public float characterSpeed;
+  
 
-    public float characterSpeed = 5.0f; // Speed of Wilmot
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Move(Vector2 inputDirection)
     {
-
+        Vector3 movement = new Vector3(inputDirection.x, inputDirection.y, 0f) * characterSpeed * Time.deltaTime;
+        transform.position += movement;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public Vector2 GetMovementInput() 
     {
-        //detect input, movementInput can be used for animation later
-        Vector2 movementInput = new Vector2(0, 0);
+        Vector2 movementInput = Vector2.zero;
 
         if (Input.GetKey(KeyCode.W))
-        {
-            this.transform.position += new Vector3(0, characterSpeed * Time.deltaTime, 0);
-            movementInput.y = 1;
-        }
+            movementInput.y += 1;
         if (Input.GetKey(KeyCode.S))
-        {
-            this.transform.position += new Vector3(0, -characterSpeed * Time.deltaTime, 0);
-            movementInput.y = -1;
-        }
+            movementInput.y -= 1;
         if (Input.GetKey(KeyCode.A))
-        {
-            this.transform.position += new Vector3(-characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = -1;
-        }
+            movementInput.x -= 1;
         if (Input.GetKey(KeyCode.D))
-        {
-            this.transform.position += new Vector3(characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = 1;
-        }
+            movementInput.x += 1;
+        return movementInput.normalized;
+    }
 
-        // to be add: If the player is moving, play the walking animation
+    
+
+    public bool CheckKeyRelease()
+    {
+        return Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) ||
+               Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D);
     }
 }

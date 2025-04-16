@@ -51,6 +51,15 @@ public class GridObject: MonoBehaviour
     private void GridSnap()
     {
         //transform coordinat to grid coordinates
+        // round to int & align the coordinate
+        Vector2Int snappedPos = new Vector2Int(
+            // change math CALCULATION
+            Mathf.RoundToInt(transform.position.x),
+            Mathf.RoundToInt(transform.position.y)
+        );
+
+        // set position & keep Z axis
+        transform.position = new Vector3(snappedPos.x, snappedPos.y, transform.position.z);
     }
     // object coordinate (x, y)
 }
