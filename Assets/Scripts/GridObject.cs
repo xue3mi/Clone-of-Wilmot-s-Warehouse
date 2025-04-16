@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class GridObject: MonoBehaviour
+public class GridObject : MonoBehaviour
 {
 
     public Vector2 gridPositio = Vector2.zero;
- 
-   
-    
 
-    
+
+
+
+
     public Vector2Int gridPosition;
 
     private Vector2Int lastPosition;
@@ -51,17 +51,15 @@ public class GridObject: MonoBehaviour
     private void GridSnap()
     {
         //transform coordinat to grid coordinates
-        // round to int & align the coordinate
-        Vector2Int snappedPos = new Vector2Int(
-            // change math CALCULATION
-            Mathf.RoundToInt(transform.position.x),
-            Mathf.RoundToInt(transform.position.y)
-        );
+
 
         // set position & keep Z axis
-        transform.position = new Vector3(snappedPos.x, snappedPos.y, transform.position.z);
+
+        float x = Grid.Instance.TopLeft.x + Grid.Instance.cellWidth * (gridPosition.x - 0.5f);
+        float y = Grid.Instance.TopLeft.y - Grid.Instance.cellWidth * (gridPosition.y - 0.5f);
+        transform.position = new Vector3(x, y, transform.position.z);
+        // object coordinate (x, y)
     }
-    // object coordinate (x, y)
 }
 
 

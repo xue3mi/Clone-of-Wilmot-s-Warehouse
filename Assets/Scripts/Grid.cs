@@ -24,6 +24,14 @@ public class Grid : MonoBehaviour
 {
     // object coordinate (x, y)
     public static Grid Instance;
+    public float cellWidth = 64f; //Width in unity units
+    public Vector2 dimensions; //number of cells on the x and the y
+    //Info used to draw the grid and for GridObjects to place themselves
+    private Vector2 _topLeft;
+    private Vector2 _bottomRight;
+    public Vector2 TopLeft { get { return _topLeft; } }
+    public Vector2 BottomRight { get { return _bottomRight; } }
+
 
     // store all detacted target blocks & their coordinates in lists
     public List<Vector2Int> allPositions = new List<Vector2Int>();
