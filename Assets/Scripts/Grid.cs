@@ -54,6 +54,15 @@ public class Grid : MonoBehaviour
        
     }
 
+    //use for lightning
+    public List<GridObject> GetAllGridObjects()
+    {
+        return allGridObjects;
+    }
+
+
+
+
     //gridobj reference
     private void RefrenshGrid(GridObject gridObject) 
     {
@@ -107,4 +116,4 @@ public class Grid : MonoBehaviour
 
 }
 
-    
+ 
