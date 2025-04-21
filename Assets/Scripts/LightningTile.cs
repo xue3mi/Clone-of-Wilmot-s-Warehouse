@@ -24,7 +24,7 @@ public class LightningTile : MonoBehaviour
             // within 7 tiles, grey
             else if (distance <= 7)
             {
-                spriteRenderer.color = new Color(0.6f, 0.6f, 0.6f);
+                spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f);
             }
             // outside 7 tiles, black
             else
