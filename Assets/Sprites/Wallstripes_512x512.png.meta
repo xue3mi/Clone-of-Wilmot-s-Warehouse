@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Wallstripes_512x512_0: 5775395945180564119
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
