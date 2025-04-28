@@ -5,12 +5,19 @@ public class LightningTile : MonoBehaviour
 {
         private SpriteRenderer spriteRenderer;
         private GridObject gridObject;
+        
+        //add black & white sprite
+        public Sprite sprite_2;
+        //save the initial sprite
+        private Sprite originalSprite;
 
-        void Start()
+    void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             //attach GridObject component to all blocks Prefab
             gridObject = GetComponent<GridObject>();
+            //save the original sprite
+            originalSprite = spriteRenderer.sprite;
         }
 
         public void UpdateLight(Vector2Int playerGridPos)
@@ -28,16 +35,19 @@ public class LightningTile : MonoBehaviour
             // white square + 1 more block on each side
             if (isCenterWhiteSquare || isCrossWhiteLine)
             {
+                spriteRenderer.sprite = originalSprite;
                 spriteRenderer.color = Color.white;
             }
             // grey circle radius=3.5
             else if (euclideanDistance <= 3.5f)
             {
-                spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f);
+                spriteRenderer.sprite = sprite_2;
+                
             }
             // black sqaure radius=3.5
             else
             {
+                spriteRenderer.sprite = sprite_2;
                 spriteRenderer.color = Color.black;
             }
         }
