@@ -1,34 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/*public class Grid: MonoBehaviour
-{
-    public static List<GridObject> gridObjects;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
-*/
-
-using UnityEngine;
-using Unity.VisualScripting;
 
 public class Grid : MonoBehaviour
 {
     // object coordinate (x, y)
     public static Grid Instance;
-    public float cellWidth = 64f; //Width in unity units
-    public Vector2 dimensions; //number of cells on the x and the y
-
-
+    //Width in unity units
+    public float cellWidth = 64f;
+    //number of cells on the x and the y
+    public Vector2 dimensions;
     //Info used to draw the grid and for GridObjects to place themselves
     private Vector2 _topLeft;
     private Vector2 _bottomRight;
@@ -40,30 +21,10 @@ public class Grid : MonoBehaviour
     public List<Vector2Int> allPositions = new List<Vector2Int>();
     private List<GridObject> allGridObjects = new List<GridObject>();
 
-    // demonstration. Not for production
-    public GameStateManager theStateManagerFromThisObject;
-
-    // demonstration
-    
-    private void Start()
+    void Awake()
     {
-        theStateManagerFromThisObject = this.GetComponent<GameStateManager>(); // something like this actually returns the whole game object, instead of just the component.
-        LightManager manager = theStateManagerFromThisObject.GetComponent<LightManager>(); // because this is the whole game object, you can access other scripts under it.
-
-        GridObject[] objs = FindObjectsByType<GridObject>(FindObjectsSortMode.None);//这个obj 找到的是 所有 具有gridobject这个script的 object
-        objs[0].GetComponent<Player>();
-    }
-    
-
-    void Awake() 
-    { 
         Instance = this;
     }
-
-
-    public List<GridObject> GetAllGridObjects() { return allGridObjects; }
-    public List<Vector2Int> GetAllPositions() { return allPositions;}
-
 
     public void UpdateGridObject(GridObject gridObject)
     {
@@ -73,37 +34,30 @@ public class Grid : MonoBehaviour
             allGridObjects.Add(gridObject);
             allPositions.Add(gridObject.gridPosition);
         }
-
-
+        
+       
     }
 
-    
+    //use for lightning
+    public List<GridObject> GetAllGridObjects()
+    {
+        return allGridObjects;
+    }
+
+
 
 
     //gridobj reference
-    private void RefreshGrid(GridObject gridObject) 
+    private void RefrenshGrid(GridObject gridObject) 
     {
         allGridObjects.Clear();
-     
-        //add all gridobj on the scene. needs TESTINg
+        allPositions.Clear();
         GridObject[] foundObjects = FindObjectsByType<GridObject>(
             FindObjectsInactive.Exclude,   // 不包括未激活的物体，按需可改成 Include
             FindObjectsSortMode.InstanceID      // 不排序，性能更高
         );
 
         allGridObjects.AddRange(foundObjects);
-        RefreshAllPositions(); 
-
-
-        //initioalize grid dimentions
-        _topLeft.x = this.transform.position.x - (dimensions.x * cellWidth * 0.5f);
-        _topLeft.y = this.transform.position.y + (dimensions.y * cellWidth * 0.5f);
-
-        _bottomRight = Vector2.zero;
-        _bottomRight.x = this.transform.position.x + (dimensions.x * cellWidth * 0.5f);
-        _bottomRight.y = this.transform.position.y - (dimensions.y * cellWidth * 0.5f);
-
-
 
 
     }
@@ -120,24 +74,14 @@ public class Grid : MonoBehaviour
         }
     }
 
-    /*
-    private void GridSnap()
+    // Transform grid coordinates to world position
+    public Vector3 GetWorldPosition(Vector2Int gridPosition)
     {
-        //transform coordinat to grid coordinates
-
-
-        // set position & keep Z axis
-
-        float x = Grid.Instance.TopLeft.x + Grid.Instance.cellWidth * (gridPosition.x - 0.5f);
-        float y = Grid.Instance.TopLeft.y - Grid.Instance.cellWidth * (gridPosition.y - 0.5f);
-        transform.position = new Vector3(x, y, transform.position.z);
-        // object coordinate (x, y)
+        return new Vector3(gridPosition.x * cellWidth, gridPosition.y * cellWidth, 0f);
     }
-    */
 
 
-
-    /*
+    // test
     private float timer = 0f;
 
     void Update()
@@ -157,7 +101,6 @@ public class Grid : MonoBehaviour
             }
         }
     }
-    test*/
 
 
 }

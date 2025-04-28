@@ -3,23 +3,21 @@ using UnityEngine;
 public class GridObject : MonoBehaviour
 {
 
-    //public Vector2 gridPositio = Vector2.zero;
-    public Vector2Int gridPosition;
-    private Vector2Int lastPosition;
+    public Vector2 gridPositio = Vector2.zero;
 
-    private enum MovingState
-    { 
-        Idle,
-        Moving
-        
-    }
-    private MovingState my_moving_state = MovingState.Idle;
+    public Vector2Int gridPosition;
+
+    private Vector2Int lastPosition;
 
     void Start()
     {
         //calculate world position(coordinate) according to its own position
         Vector2 myWorldPos = transform.position;
-        //gridPosition = new Vector2Int(Mathf.RoundToInt(myWorldPos.x), Mathf.RoundToInt(myWorldPos.y));
+
+        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
+        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth; 
+
+        gridPosition = new Vector2Int(Mathf.RoundToInt(myWorldPos.x), Mathf.RoundToInt(myWorldPos.y));
         lastPosition = gridPosition;
 
         // tell GridManager coordinate
@@ -32,18 +30,20 @@ public class GridObject : MonoBehaviour
         //if not connected to wilmot && moving
         //GridSnap()
 
-        switch (my_moving_state) 
+        // calculate world position(coordinate)
+        Vector2 myWorldPos = transform.position;
+        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
+        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth;
+        
+
+        Vector2Int currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+
+        if (currentPosition != lastPosition)
         {
-            case MovingState.Idle:
-
-                break;
-            case MovingState.Moving:
-                //GridSnap();
-                Grid.Instance.UpdateGridObject(this);
-
-                break;
+            gridPosition = currentPosition;
+            lastPosition = currentPosition;
+            Grid.Instance.UpdateGridObject(this);
         }
-
     }
 
     // if coordinate changed or updated£¬call this function to tell GridManager
@@ -51,6 +51,18 @@ public class GridObject : MonoBehaviour
     {
         gridPosition = new Vector2Int(x, y);
         Grid.Instance.UpdateGridObject(this);
+    }
+    private void GridSnap()
+    {
+        //transform coordinat to grid coordinates
+
+
+        // set position & keep Z axis
+
+        float x = Grid.Instance.TopLeft.x + Grid.Instance.cellWidth * (gridPosition.x - 0.5f);
+        float y = Grid.Instance.TopLeft.y - Grid.Instance.cellWidth * (gridPosition.y - 0.5f);
+        transform.position = new Vector3(x, y, transform.position.z);
+        // object coordinate (x, y)
     }
 }
 
