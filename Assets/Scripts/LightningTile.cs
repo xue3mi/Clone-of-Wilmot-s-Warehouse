@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.Rendering.ProbeAdjustmentVolume;
 
 public class LightningTile : MonoBehaviour
 {
@@ -19,8 +20,13 @@ public class LightningTile : MonoBehaviour
 
             float euclideanDistance = Vector2.Distance(gridObject.gridPosition, playerGridPos);
 
-            // white sqaure radius=2
-            if (dx <= 2 && dy <= 2)
+            bool isCenterWhiteSquare = (dx <= 2 && dy <= 2);
+            bool isCrossWhiteLine =
+                (dx == 0 && dy == 3) ||   // up & down
+                (dy == 0 && dx == 3);     // left & right
+
+            // white square + 1 more block on each side
+            if (isCenterWhiteSquare || isCrossWhiteLine)
             {
                 spriteRenderer.color = Color.white;
             }

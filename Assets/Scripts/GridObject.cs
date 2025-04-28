@@ -5,10 +5,6 @@ public class GridObject : MonoBehaviour
 
     public Vector2 gridPositio = Vector2.zero;
 
-
-
-
-
     public Vector2Int gridPosition;
 
     private Vector2Int lastPosition;
@@ -17,6 +13,10 @@ public class GridObject : MonoBehaviour
     {
         //calculate world position(coordinate) according to its own position
         Vector2 myWorldPos = transform.position;
+
+        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
+        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth; 
+
         gridPosition = new Vector2Int(Mathf.RoundToInt(myWorldPos.x), Mathf.RoundToInt(myWorldPos.y));
         lastPosition = gridPosition;
 
@@ -30,7 +30,11 @@ public class GridObject : MonoBehaviour
         //if not connected to wilmot && moving
         //GridSnap()
 
-
+        // calculate world position(coordinate)
+        Vector2 myWorldPos = transform.position;
+        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
+        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth;
+        
 
         Vector2Int currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
 

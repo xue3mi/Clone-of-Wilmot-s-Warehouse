@@ -1,31 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/*public class Grid: MonoBehaviour
-{
-    public static List<GridObject> gridObjects;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
-*/
-
-using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
     // object coordinate (x, y)
     public static Grid Instance;
-    public float cellWidth = 64f; //Width in unity units
-    public Vector2 dimensions; //number of cells on the x and the y
+    //Width in unity units
+    public float cellWidth = 64f;
+    //number of cells on the x and the y
+    public Vector2 dimensions;
     //Info used to draw the grid and for GridObjects to place themselves
     private Vector2 _topLeft;
     private Vector2 _bottomRight;
@@ -90,6 +74,11 @@ public class Grid : MonoBehaviour
         }
     }
 
+    // Transform grid coordinates to world position
+    public Vector3 GetWorldPosition(Vector2Int gridPosition)
+    {
+        return new Vector3(gridPosition.x * cellWidth, gridPosition.y * cellWidth, 0f);
+    }
 
 
     // test
