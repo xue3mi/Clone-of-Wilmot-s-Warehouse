@@ -16,6 +16,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+       
+    }
+
+    public void MovePlayer()
+    {
         // Get input direction from keys (WASD)
         Vector2 inputDirection = GetMovementInput();
 

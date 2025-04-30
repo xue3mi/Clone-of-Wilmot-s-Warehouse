@@ -52,7 +52,7 @@ public class GridObject : MonoBehaviour
         gridPosition = new Vector2Int(x, y);
         Grid.Instance.UpdateGridObject(this);
     }
-    private void GridSnap()
+    public void GridSnap()
     {
         //transform coordinat to grid coordinates
 

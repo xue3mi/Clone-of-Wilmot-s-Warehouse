@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -9,7 +10,7 @@ public class Player : MonoBehaviour
         move_state,
         heavy_move_state
     }
-    private playerState current_state = playerState.idle_state;
+    private playerState current_state = playerState.move_state;
     void Start()
     {
         
@@ -20,12 +21,36 @@ public class Player : MonoBehaviour
     {
         switch (current_state) { 
             case playerState.idle_state:
+                HandleIdle();
+
                 break;
             case playerState.move_state:
+                HandleMove();
                 break;
-            case playerState.heavy_move_state: 
+            case playerState.heavy_move_state:
+                HandleHeavyMove();
                 
                 break;
         }
+    }
+
+    private void HandleHeavyMove()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void HandleMove()
+    {
+   
+        PlayerMovement myPlayerMovement = GetComponent<PlayerMovement>();
+        myPlayerMovement.MovePlayer();
+        throw new NotImplementedException();
+    }
+
+    private void HandleIdle()
+    {
+        GridObject myGridObject = GetComponent<GridObject>();
+        myGridObject.GridSnap();
+
     }
 }

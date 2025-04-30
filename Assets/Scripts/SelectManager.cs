@@ -13,4 +13,6 @@ public class SelectManager : MonoBehaviour
     {
         
     }
+
+    //Êó±ê°´×¡
 }
