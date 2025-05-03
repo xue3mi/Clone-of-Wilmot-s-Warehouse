@@ -11,8 +11,6 @@ public class TimerManager : MonoBehaviour
     public Image timeBackground;
     public List<GameObject> hintBars;
 
-
-
     private enum Phase { Delivery, Service, StockTake }
     private Phase currentPhase = Phase.Delivery;
 
@@ -33,6 +31,18 @@ public class TimerManager : MonoBehaviour
 
     private void Update()
     {
+        // Change timeBackground color when in service phase
+        if (currentPhase == Phase.Service)
+        {
+            timeBackground.color = new Color(0.996f, 0.992f, 0.925f);  // Service phase: #FEFDEC
+            phaseText.color = Color.black;  // Service phase: black text
+        }
+        else
+        {
+            timeBackground.color = new Color(0f, 0f, 0f, 200f / 255f);  // Default color for other phases
+            phaseText.color = Color.white;  // Default text color
+        }
+
         if (currentPhase != Phase.StockTake)
         {
             timer -= Time.deltaTime;
@@ -43,17 +53,6 @@ public class TimerManager : MonoBehaviour
                 //display time bar fill amount (from right to left)
                 timeFill.fillAmount = Mathf.Clamp01(timer / currentPhaseDuration);
             }
-
-            // Change timeBackground color when in service phase
-            if (currentPhase == Phase.Service)
-            {
-                timeBackground.color = new Color(0.996f, 0.992f, 0.925f);  // Service phase: #FEFDEC
-            }
-            else
-            {
-                timeBackground.color = new Color(0f, 0f, 0f, 200f / 255f);  // Default color for other phases
-            }
-
 
             // Trigger LowerCameraAnimation at 2m 51s
             if (!triggeredDownAnimation && currentPhase == Phase.Delivery && timer <= 171f)
@@ -122,5 +121,4 @@ public class TimerManager : MonoBehaviour
             phaseText.text = $"{phaseName}: {minutes}m {seconds}s LEFT";
         }
     }
-
 }
