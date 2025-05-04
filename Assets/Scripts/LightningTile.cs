@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using static UnityEngine.Rendering.ProbeAdjustmentVolume;
 
 public class LightningTile : MonoBehaviour
@@ -11,6 +12,25 @@ public class LightningTile : MonoBehaviour
         //save the initial sprite
         private Sprite originalSprite;
 
+    // when Animation is played, ignore lightning
+    private bool ignoreLighting = false;
+
+    public void SetIgnoreLighting(float duration)
+    {
+        StartCoroutine(IgnoreLightingRoutine(duration));
+    }
+
+    private IEnumerator IgnoreLightingRoutine(float duration)
+    {
+        ignoreLighting = true;
+        // original sprite
+        spriteRenderer.sprite = originalSprite;
+        spriteRenderer.color = Color.white;
+
+        yield return new WaitForSeconds(duration);
+        ignoreLighting = false;
+    }
+
     void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -22,6 +42,9 @@ public class LightningTile : MonoBehaviour
 
         public void UpdateLight(Vector2Int playerGridPos)
         {
+            if (ignoreLighting)
+                return;
+
             int dx = Mathf.Abs(gridObject.gridPosition.x - playerGridPos.x);
             int dy = Mathf.Abs(gridObject.gridPosition.y - playerGridPos.y);
 
