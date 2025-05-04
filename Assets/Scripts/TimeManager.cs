@@ -7,6 +7,7 @@ public class TimerManager : MonoBehaviour
 {
     public TextMeshProUGUI phaseText;
     public CameraCutsceneManager sceneCamera;
+    //public Image timeBar;
     public Image timeFill;
     public Image timeBackground;
     public List<GameObject> hintBars;
@@ -37,12 +38,16 @@ public class TimerManager : MonoBehaviour
         if (currentPhase == Phase.Service)
         {
             timeBackground.color = new Color(0.996f, 0.992f, 0.925f);  // Service phase: #FEFDEC
-            phaseText.color = Color.black;  // Service phase: black text
+            // Service phase: black text & fillBar
+            phaseText.color = Color.black;
+            timeFill.color = Color.black;
         }
         else
         {
             timeBackground.color = new Color(0f, 0f, 0f, 200f / 255f);  // Default color for other phases
-            phaseText.color = Color.white;  // Default text color
+            // Default text color
+            phaseText.color = Color.white;
+            timeFill.color = new Color(0.996f, 0.980f, 0.918f); //#FEFAEA
         }
 
         if (currentPhase != Phase.StockTake)
@@ -56,8 +61,8 @@ public class TimerManager : MonoBehaviour
                 timeFill.fillAmount = Mathf.Clamp01(timer / currentPhaseDuration);
             }
 
-            // Trigger LowerCameraAnimation at 2m 51s
-            if (!triggeredDownAnimation && currentPhase == Phase.Delivery && timer <= 171f)
+            // Trigger LowerCameraAnimation at 2m 55s
+            if (!triggeredDownAnimation && currentPhase == Phase.Delivery && timer <= 175f)
             {
                 triggeredDownAnimation = true;
                 StartCoroutine(sceneCamera.LowerCameraMove());
