@@ -10,6 +10,8 @@ public class TimerManager : MonoBehaviour
     public Image timeFill;
     public Image timeBackground;
     public List<GameObject> hintBars;
+    public List<GameObject> customerBubbles;
+
 
     private enum Phase { Delivery, Service, StockTake }
     private Phase currentPhase = Phase.Delivery;
@@ -82,6 +84,16 @@ public class TimerManager : MonoBehaviour
                 bar.SetActive(currentPhase == Phase.Service);
             }
         }
+
+        // all customerBubble Show/Hide
+        foreach (GameObject bubble in customerBubbles)
+        {
+            if (bubble != null)
+            {
+                bubble.SetActive(currentPhase == Phase.Service);
+            }
+        }
+
     }
 
     private void SwitchToNextPhase()

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraCutsceneManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class CameraCutsceneManager : MonoBehaviour
 
     public PlayerMovement playerMovement;
     public CameraFollow cameraFollow;
+
+    public List<GameObject> customerBubbles;
 
     public float moveSpeed = 50f;
     // 2m 41s release animation
@@ -29,6 +32,18 @@ public class CameraCutsceneManager : MonoBehaviour
         yield return StartCoroutine(MoveCamera(upperFocusPoint.position));
         yield return new WaitForSeconds(waitTimeAtTarget);
         yield return StartCoroutine(MoveCamera(player.position));
+        EnablePlayerControl();
+
+        //show customerBubbles after UpperAnimation played for 3s
+        yield return new WaitForSeconds(3f);
+        foreach (GameObject bubble in customerBubbles)
+        {
+            if (bubble != null)
+            {
+                bubble.SetActive(true);
+            }
+        }
+
         EnablePlayerControl();
     }
 

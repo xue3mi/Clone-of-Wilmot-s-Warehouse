@@ -38,13 +38,13 @@ public class LightningTile : MonoBehaviour
                 spriteRenderer.sprite = originalSprite;
                 spriteRenderer.color = Color.white;
             }
-            // grey circle radius=3.5
-            else if (euclideanDistance <= 3.5f)
+            // grey circle radius=7
+            else if (euclideanDistance <= 7f)
             {
                 spriteRenderer.sprite = sprite_2;
                 
             }
-            // black sqaure radius=3.5
+            // black sqaure radius=7
             else
             {
                 spriteRenderer.sprite = sprite_2;
