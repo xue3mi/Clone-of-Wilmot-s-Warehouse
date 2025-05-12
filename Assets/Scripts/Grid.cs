@@ -7,7 +7,7 @@ public class Grid : MonoBehaviour
     // object coordinate (x, y)
     public static Grid Instance;
     //Width in unity units
-    public float cellWidth = 64f;
+    public float cellWidth = 1f;
     //number of cells on the x and the y
     public Vector2 dimensions;
     //Info used to draw the grid and for GridObjects to place themselves
@@ -35,19 +35,23 @@ public class Grid : MonoBehaviour
             allPositions.Add(gridObject.gridPosition);
         }
         
+        
        
     }
 
-    //use for lightning
+    
     public List<GridObject> GetAllGridObjects()
     {
         return allGridObjects;
     }
 
+    public List<Vector2Int> GetAllGridObjectPositions()
+    {
+        return allPositions;
+    }
 
 
-
-    //gridobj reference
+   //use for restart
     private void RefrenshGrid(GridObject gridObject) 
     {
         allGridObjects.Clear();
@@ -75,13 +79,25 @@ public class Grid : MonoBehaviour
     }
 
     // Transform grid coordinates to world position
-    public Vector3 GetWorldPosition(Vector2Int gridPosition)
+    public Vector3 GridToWorldPosition(Vector2Int gridPos)
     {
-        return new Vector3(gridPosition.x * cellWidth, gridPosition.y * cellWidth, 0f);
+        float x = TopLeft.x + cellWidth * (gridPos.x - 0.5f);
+        float y = TopLeft.y - cellWidth * (gridPos.y - 0.5f);
+        return new Vector3(x, y, 0f);
     }
+    public Vector2Int WorldToGridPosition(Vector2 worldPos)
+    {
+        float x = (worldPos.x - TopLeft.x) / cellWidth;
+        float y = (TopLeft.y - worldPos.y) / cellWidth;
+        return new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y));
 
 
-    // test
+
+    }
+}
+
+
+    /* test
     private float timer = 0f;
 
     void Update()
@@ -97,12 +113,11 @@ public class Grid : MonoBehaviour
             Debug.Log("All blocks' coordinate£º");
             foreach (Vector2Int pos in allPositions)
             {
-                Debug.Log(pos);
+                //Debug.Log(pos);
             }
         }
     }
+    */
+    
 
 
-}
-
- 

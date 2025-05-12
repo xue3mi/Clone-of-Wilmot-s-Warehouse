@@ -1,49 +1,81 @@
+using System;
 using UnityEngine;
 
 public class GridObject : MonoBehaviour
 {
 
-    public Vector2 gridPositio = Vector2.zero;
 
-    public Vector2Int gridPosition;
+    public Vector2Int gridPosition = Vector2Int.zero;
 
-    private Vector2Int lastPosition;
+    private Vector2Int lastPosition = Vector2Int.zero;
+    private Rigidbody2D myRigidBody;
+    // highlighter when selected
+    private SpriteRenderer _sr;
+    private Color _normalColor;
+    [SerializeField] private Color _highlightColor = Color.yellow;
+
+    public bool is_moving = false;
+
+
+    private void Awake()
+    {
+        myRigidBody = GetComponent<Rigidbody2D>();
+        _sr = GetComponent<SpriteRenderer>();
+        _normalColor = _sr.color;
+        InitializeBlock();
+        
+    }
+
+   
 
     void Start()
     {
-        //calculate world position(coordinate) according to its own position
-        Vector2 myWorldPos = transform.position;
-
-        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
-        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth; 
-
-        gridPosition = new Vector2Int(Mathf.RoundToInt(myWorldPos.x), Mathf.RoundToInt(myWorldPos.y));
-        lastPosition = gridPosition;
-
-        // tell GridManager coordinate
-        Grid.Instance.UpdateGridObject(this);
+            
     }
 
     // automatic update if coordinate changed
     void Update()
     {
-        //if not connected to wilmot && moving
-        //GridSnap()
+        //ËæÊ±update grid cord
+        Vector2Int current = Grid.Instance.WorldToGridPosition(transform.position);
 
-        // calculate world position(coordinate)
-        Vector2 myWorldPos = transform.position;
-        myWorldPos.x = (myWorldPos.x - Grid.Instance.TopLeft.x) / Grid.Instance.cellWidth;
-        myWorldPos.y = (Grid.Instance.TopLeft.y - myWorldPos.y) / Grid.Instance.cellWidth;
-        
-
-        Vector2Int currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-
-        if (currentPosition != lastPosition)
+        switch (is_moving)
         {
-            gridPosition = currentPosition;
-            lastPosition = currentPosition;
-            Grid.Instance.UpdateGridObject(this);
+            case true:
+
+                break;
+            case false:
+
+                if (current != lastPosition)
+                {
+                    GridSnap();
+                    
+                    gridPosition = current;
+                    //last position should be updated only when changed to idle;
+                    lastPosition = current;
+                    Grid.Instance.UpdateGridObject(this);
+                }
+             
+                break;
         }
+    }
+    private void InitializeBlock()
+    {
+        Vector2 myWorldPos = transform.position;
+        gridPosition = Grid.Instance.WorldToGridPosition(myWorldPos);
+        Grid.Instance.UpdateGridObject(this);
+        lastPosition = gridPosition;
+
+        myWorldPos = Grid.Instance.GridToWorldPosition(gridPosition);
+       
+    }
+
+    //highlight change state
+
+    public void Highlight(bool on)
+    {
+        if (_sr == null) _sr = GetComponent<SpriteRenderer>();
+        _sr.color = on ? _highlightColor : _normalColor;
     }
 
     // if coordinate changed or updated£¬call this function to tell GridManager
@@ -55,13 +87,17 @@ public class GridObject : MonoBehaviour
     public void GridSnap()
     {
         //transform coordinat to grid coordinates
+        lastPosition = gridPosition;
 
+        Vector2Int _newGridPos = Grid.Instance.WorldToGridPosition(new Vector2(transform.position.x, transform.position.y));
+        
 
-        // set position & keep Z axis
+        //transform gridpos to worldpos
 
-        float x = Grid.Instance.TopLeft.x + Grid.Instance.cellWidth * (gridPosition.x - 0.5f);
-        float y = Grid.Instance.TopLeft.y - Grid.Instance.cellWidth * (gridPosition.y - 0.5f);
-        transform.position = new Vector3(x, y, transform.position.z);
+        Vector3 _newWorldPos = Grid.Instance.GridToWorldPosition(_newGridPos);
+
+        transform.position = _newWorldPos;
+
         // object coordinate (x, y)
     }
 }
