@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class LightManager : MonoBehaviour
 {
-    public GameObject player;
+    public GridObject player;
+   // public GameObject player;
 
     void Update()
     {
         Vector2 playerPos = player.transform.position;
-        Vector2Int playerGridPos = new Vector2Int(Mathf.RoundToInt(playerPos.x), Mathf.RoundToInt(playerPos.y));
+        Vector2Int playerGridPos = Grid.Instance.WorldToGridPosition(playerPos);
 
         //check all blocks with GridObject
         foreach (GridObject obj in Grid.Instance.GetAllGridObjects())

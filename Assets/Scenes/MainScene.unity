@@ -3557,7 +3557,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b94a1885489a1445afd4925e0b20fd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoothTime: 0.1
 --- !u!212 &882096841
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3643,6 +3642,7 @@ MonoBehaviour:
   gridPosition: {x: 1, y: 1}
   _highlightColor: {r: 0.9496855, g: 0.9389772, b: 0.815296, a: 1}
   is_moving: 0
+  is_gridSnapped: 0
 --- !u!114 &882096844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3656,6 +3656,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current_state: 1
+  sprite_width: 0
+  sprite_height: 0
 --- !u!1001 &915105788
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6662,7 +6664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322494e8b902f264da1c426966e8a69d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 882096839}
+  player: {fileID: 882096843}
 --- !u!114 &1785325599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6676,8 +6678,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellWidth: 64
+  cellHeight: 0
   dimensions: {x: 0, y: 0}
-  allPositions: []
 --- !u!4 &1785325600
 Transform:
   m_ObjectHideFlags: 0
