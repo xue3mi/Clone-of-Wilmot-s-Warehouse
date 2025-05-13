@@ -21,8 +21,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        _targetWorldPos = Grid.Instance.GridToWorldPosition(_gridObj.gridPosition);
-        transform.position = _targetWorldPos;
+
+        //_targetWorldPos = Grid.Instance.GridToWorldPosition(_gridObj.gridPosition);
+        //transform.position = _targetWorldPos;
 
     }
 

@@ -47,9 +47,11 @@ public class Player : MonoBehaviour
         
         sprite_width = mySpriteRenderer.bounds.size.x;
         sprite_height = mySpriteRenderer.bounds.size.y;
-        Grid.Instance.cellWidth = sprite_width;
-        Grid.Instance.cellHeight = sprite_height;
+        //Grid.Instance.cellWidth = sprite_width;
+       // Grid.Instance.cellHeight = sprite_height;
 
+
+        myGridObject.gridPosition = new Vector2Int(0, 0);
 
 
     }
@@ -59,12 +61,11 @@ public class Player : MonoBehaviour
         switch (current_state)
         {
             case playerState.idle_state:
-                myGridObject.is_moving = false;
+                
                 Debug.Log("player idle state");
                 HandleIdle();
                 break;
             case playerState.move_state:
-                myGridObject.is_moving = true;
                 Debug.Log("player move state");
 
                 HandleMove();
@@ -87,7 +88,7 @@ public class Player : MonoBehaviour
     }
     private void HandleIdle()
     {
-        
+        myGridObject.is_moving = false;
         can_select = true;
         _speed = 0;
         _dir = Vector2.zero;
@@ -107,6 +108,9 @@ public class Player : MonoBehaviour
 
     private void HandleMove()
     {
+
+        myGridObject.is_moving = true;
+
         _speed = normal_speed;
         can_select = false;
         // 连续调用移动逻辑

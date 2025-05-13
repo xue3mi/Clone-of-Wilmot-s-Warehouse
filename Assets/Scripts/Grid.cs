@@ -14,7 +14,6 @@ public class Grid : MonoBehaviour
     //Info used to draw the grid and for GridObjects to place themselves
     private Vector2 _topLeft;
     private Vector2 _bottomRight;
-    private SpriteRenderer sr;
     private GridObject myGridObject;
     public Vector2 TopLeft { get { return _topLeft; } }
     public Vector2 BottomRight { get { return _bottomRight; } }
@@ -28,6 +27,18 @@ public class Grid : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        Instance = this;
+
+        // 如果你想自动抓第一个方块的尺寸：
+        var anyBlock = FindObjectOfType<GridObject>();
+        if (anyBlock != null)
+        {
+            var sr = anyBlock.GetComponent<SpriteRenderer>();
+            cellWidth = sr.bounds.size.x;
+            cellHeight = sr.bounds.size.y;
+        }
+
         Instance = this;
         _topLeft = new Vector2(-45, 30);
         _bottomRight = new Vector2(45, -30);

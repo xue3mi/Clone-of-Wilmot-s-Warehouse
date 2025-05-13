@@ -15,6 +15,8 @@ public class GridObject : MonoBehaviour
     [SerializeField] private Color _highlightColor = Color.yellow;
 
     public bool is_moving = false;
+    private bool _wasMoving = true;
+    public bool is_gridSnapped = false;
 
 
     private void Awake()
@@ -30,7 +32,7 @@ public class GridObject : MonoBehaviour
     void Start()
     {
         InitializeBlock();
-
+        _wasMoving = is_moving;
     }
 
     // automatic update if coordinate changed
@@ -40,21 +42,42 @@ public class GridObject : MonoBehaviour
         Vector2Int current_grid_cord = Grid.Instance.WorldToGridPosition(transform.position);
         gridPosition = current_grid_cord;
         Debug.Log("is_moving" + is_moving);
+
+        // 检测从 moving → idle 的瞬间
+        if (_wasMoving && !is_moving)
+        {
+            // 只在状态切换的这一帧执行一次
+            GridSnap();
+            Debug.Log("GridSnap() triggered on stop moving");
+        }
+        Grid.Instance.UpdateGridObject(this);
+
+        // 最后再把当前状态存到 _wasMoving，供下一帧比较
+        _wasMoving = is_moving;
+
         switch (is_moving)
         {
             case true:
+               // is_gridSnapped = false;
                 Debug.Log("is_moving turned to true");
                 break;
             case false:
                 Debug.Log("is_moving turned to false");
+                //is_gridSnapped = true;
+                if (is_gridSnapped)
+                {
+                    GridSnap();
+                   // is_gridSnapped=false;
+
+
+                }
 
                 //if (current_grid_cord != lastPosition)
                 //{
-                GridSnap();                   
-                   // gridPosition = current_grid_cord;
-                    //last position should be updated only when changed to idle;
-                   // lastPosition = current_grid_cord;
-                    Grid.Instance.UpdateGridObject(this);
+                // gridPosition = current_grid_cord;
+                //last position should be updated only when changed to idle;
+                // lastPosition = current_grid_cord;
+               
                // }
              
             break;
@@ -62,13 +85,16 @@ public class GridObject : MonoBehaviour
     }
     private void InitializeBlock()
     {
-        Vector2 myWorldPos = transform.position;
-        gridPosition = Grid.Instance.WorldToGridPosition(myWorldPos);
+        Vector2 worldPos = transform.position;
+        gridPosition = Grid.Instance.WorldToGridPosition(worldPos);
         Grid.Instance.UpdateGridObject(this);
-        
 
-        myWorldPos = Grid.Instance.GridToWorldPosition(gridPosition);
-       
+        // 2. 再把格子坐标转回“格子中心”的世界坐标
+        Vector3 snappedPos = Grid.Instance.GridToWorldPosition(gridPosition);
+
+        // 3. **真正把物体瞬移到格子中心**  
+        transform.position = snappedPos;
+
     }
 
     //highlight change state
