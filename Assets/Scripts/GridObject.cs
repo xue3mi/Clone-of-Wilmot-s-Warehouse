@@ -37,7 +37,7 @@ public class GridObject : MonoBehaviour
     void Update()
     {
         //ËæÊ±update grid cord
-        Vector2Int current = Grid.Instance.WorldToGridPosition(transform.position);
+        Vector2Int current_grid_cord = Grid.Instance.WorldToGridPosition(transform.position);
 
         switch (is_moving)
         {
@@ -46,17 +46,16 @@ public class GridObject : MonoBehaviour
                 break;
             case false:
 
-                if (current != lastPosition)
+                if (current_grid_cord != lastPosition)
                 {
-                    GridSnap();
-                    
-                    gridPosition = current;
+                    GridSnap();                   
+                    gridPosition = current_grid_cord;
                     //last position should be updated only when changed to idle;
-                    lastPosition = current;
+                    lastPosition = current_grid_cord;
                     Grid.Instance.UpdateGridObject(this);
                 }
              
-                break;
+            break;
         }
     }
     private void InitializeBlock()

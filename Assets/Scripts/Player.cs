@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
     //manager类
 
     //constants
-    public const float normal_speed = 50f;
-    public const float heavy_speed = 10f;
+    public const float normal_speed = 5f;
+    public const float heavy_speed = 1f;
 
 
     public enum playerState { idle_state, move_state, heavy_move_state }
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private float _speed = normal_speed;
     private Vector2 _dir;
     private Vector2 _velocity;
-
+    private Vector2 current_velocity;
     //smoothdamp
     private float _smoothTime = 0.1f;
     
@@ -47,12 +47,16 @@ void Update()
         switch (current_state)
         {
             case playerState.idle_state:
+                myGridObject.is_moving = false;
                 HandleIdle();
                 break;
             case playerState.move_state:
+                myGridObject.is_moving = true;
                 HandleMove();
                 break;
             case playerState.heavy_move_state:
+                myGridObject.is_moving = true;
+
                 HandleHeavyMove();
                 break;
         }
@@ -68,17 +72,19 @@ void Update()
     {
         
         can_select = true;
-        //var mover = GetComponent<PlayerMovement>();
-       // mover.enabled = false;
-        // Idle 时锁定在格点
-       // myGridObject.GridSnap();
+        _speed = 0;
+        _dir = Vector2.zero;
+        _velocity = Vector2.zero;
+
+        //myGridObject.GridSnap();//////這個gridobj裡有ismoving調控
 
         // 检测开始移动，change state
             //只有先停下到idle_state才能转换到其他两个movestate
-        if (myPlayerMovement.IsInputMove())
+        if (PlayerMovement.IsInputMove())
         {
             //检测selection set的数量决定changestate到另外两个*未写完
             current_state = playerState.move_state;
+            //Debug.Log("State set to move");
         }
     }
 
@@ -90,64 +96,47 @@ void Update()
         //已经按下wasd，那么根据方向移动，然后平滑
         
         ChangeMoveDirection();
-        PlayerMovement.Move(myRigidbody, _dir, _speed, _smoothTime, ref _velocity);
+        PlayerMovement.Move(ref _velocity, _dir, _speed, _smoothTime, ref current_velocity, transform);
 
-
+        Debug.Log($"HandleMove → _velocity = {_velocity}");
         //state change conditions
-        if (_velocity == Vector2.zero) {
-            current_state = playerState.idle_state;
+        //if (_velocity == Vector2.zero) {
+        if (!PlayerMovement.IsInputMove()) {
+
+           current_state = playerState.idle_state;
+           // Debug.Log("State set to idle");
         }
 
       
     }
 
     private void ChangeMoveDirection() {
-        switch (myPlayerMovement.CheckMoveDirection())
+
+        int pressed = myPlayerMovement.CheckMoveDirection();
+        Debug.Log($"ChangeMoveDirection → pressed = {pressed}");
+
+        switch (pressed)
         {
-            case 0:
-                current_move_dir = _moveDir.none;
-                break;
-            case 1:
-                current_move_dir = _moveDir.up;
-                break;
-            case 2:
-                current_move_dir = _moveDir.down;
-                break;
-            case 3:
-                current_move_dir = _moveDir.left;
+            case 1: current_move_dir = _moveDir.up;    break;
+            case 2: current_move_dir = _moveDir.down;  break;
+            case 3: current_move_dir = _moveDir.left;  break;
+            case 4: current_move_dir = _moveDir.right; break;
+            case 0: current_move_dir = _moveDir.none; break;
 
-                break;
-            case 4:
-                current_move_dir = _moveDir.right;
-
-                break;
-                
         }
+        Debug.Log($"ChangeMoveDirection → current_move_dir = {current_move_dir}");
+
         switch (current_move_dir)
-        {
-            case _moveDir.up:
-                _dir = Vector2.up;
-                break;
-            case _moveDir.down:
-                _dir = Vector2.down;
-
-                break;
-            case _moveDir.left:
-                _dir = Vector2.left;
-
-                break;
-            case _moveDir.right:
-                _dir = Vector2.right;
-
-                break;
-            case _moveDir.none:
-                _dir = Vector2.zero;
-
-                break;
-
-
-        }
+    {
+        case _moveDir.up:    _dir = Vector2.up;    break;
+        case _moveDir.down:  _dir = Vector2.down;  break;
+        case _moveDir.left:  _dir = Vector2.left;  break;
+        case _moveDir.right: _dir = Vector2.right; break;
+        case _moveDir.none:  _dir = Vector2.zero;  break;
     }
+        Debug.Log($"ChangeMoveDirection → _dir = {_dir}");
+    }
+
     
     private void HandleHeavyMove()
     {

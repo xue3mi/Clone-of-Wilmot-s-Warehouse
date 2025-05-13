@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _targetWorldPos;
     private bool _isMoving;
     private Player _player;
-    
+    private int dir = 0;
 
     private void Awake()
     {
@@ -46,20 +46,20 @@ public class PlayerMovement : MonoBehaviour
     //keep updating to override the previous dir, to ensure theres only 4 dir
     public int CheckMoveDirection()
     {
-        int dir = 0;
+   
         if (Input.GetKeyDown(KeyCode.W)) dir = 1;
         else if (Input.GetKeyDown(KeyCode.S)) dir = 2;
         else if (Input.GetKeyDown(KeyCode.A)) dir = 3;
         else if (Input.GetKeyDown(KeyCode.D)) dir = 4;
-        else dir = 0;
-        if (dir != 0)
-            Debug.Log("Dir: " + dir);
+  
 
+        if (!IsInputMove()){ dir = 0; }
+        Debug.Log($"CheckMoveDirection → dir = {dir}");
         return dir;
     }
 
     //check if is inputing movement
-    public bool IsInputMove() {
+    public static bool IsInputMove() {
         if (Input.GetKey(KeyCode.W)
         || Input.GetKey(KeyCode.S) 
         ||Input.GetKey(KeyCode.A)
@@ -70,19 +70,15 @@ public class PlayerMovement : MonoBehaviour
         else { return false; }
     }
 
-    public static void Move(
-        Rigidbody2D rb,
-        Vector2 inputDir,
-        float speed,
-        float smoothTime,
-        ref Vector2 velocityRef )
+    public static void Move(ref Vector2 currentVel, Vector2 inputDir, 
+        float speed, float smoothTime, ref Vector2 velocityRef, Transform transform)
     {
-        // 目标速度
+        // 1. 计算目标速度
         Vector2 targetVel = inputDir * speed;
-        // 平滑过渡，并更新 velocityRef
-        Vector2 newVel = Vector2.SmoothDamp(rb.linearVelocity, targetVel, ref velocityRef, smoothTime);
-        // 应用速度
-        rb.linearVelocity = newVel;
+        // 2. 平滑过渡，更新 currentVel
+        currentVel = Vector2.SmoothDamp(currentVel, targetVel, ref velocityRef, smoothTime);
+        // 3. 根据 newVel 更新位置（注意乘以 Time.deltaTime）
+        transform.position += (Vector3)(currentVel * Time.deltaTime);
     }
 
     private void BeginMove(Vector2Int dir)  
