@@ -32,29 +32,46 @@ public class Player : MonoBehaviour
     private _moveDir current_move_dir = _moveDir.none;
 
 
+    //for gird refe
+    private SpriteRenderer mySpriteRenderer;
+    public float sprite_width;
+    public float sprite_height;
+
 
     private void Start()
     {
         myPlayerMovement = GetComponent<PlayerMovement>();
         myGridObject = GetComponent<GridObject>();
         myRigidbody = GetComponent<Rigidbody2D>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
         
+        sprite_width = mySpriteRenderer.bounds.size.x;
+        sprite_height = mySpriteRenderer.bounds.size.y;
+        Grid.Instance.cellWidth = sprite_width;
+        Grid.Instance.cellHeight = sprite_height;
 
-}
-void Update()
+
+
+    }
+    void Update()
     {
 
         switch (current_state)
         {
             case playerState.idle_state:
                 myGridObject.is_moving = false;
+                Debug.Log("player idle state");
                 HandleIdle();
                 break;
             case playerState.move_state:
                 myGridObject.is_moving = true;
+                Debug.Log("player move state");
+
                 HandleMove();
                 break;
             case playerState.heavy_move_state:
+                Debug.Log("player heavy state");
+
                 myGridObject.is_moving = true;
 
                 HandleHeavyMove();
@@ -98,7 +115,7 @@ void Update()
         ChangeMoveDirection();
         PlayerMovement.Move(ref _velocity, _dir, _speed, _smoothTime, ref current_velocity, transform);
 
-        Debug.Log($"HandleMove ¡ú _velocity = {_velocity}");
+
         //state change conditions
         //if (_velocity == Vector2.zero) {
         if (!PlayerMovement.IsInputMove()) {
@@ -113,7 +130,7 @@ void Update()
     private void ChangeMoveDirection() {
 
         int pressed = myPlayerMovement.CheckMoveDirection();
-        Debug.Log($"ChangeMoveDirection ¡ú pressed = {pressed}");
+       // Debug.Log($"ChangeMoveDirection ¡ú pressed = {pressed}");
 
         switch (pressed)
         {
@@ -124,7 +141,7 @@ void Update()
             case 0: current_move_dir = _moveDir.none; break;
 
         }
-        Debug.Log($"ChangeMoveDirection ¡ú current_move_dir = {current_move_dir}");
+        //Debug.Log($"ChangeMoveDirection ¡ú current_move_dir = {current_move_dir}");
 
         switch (current_move_dir)
     {
@@ -134,7 +151,7 @@ void Update()
         case _moveDir.right: _dir = Vector2.right; break;
         case _moveDir.none:  _dir = Vector2.zero;  break;
     }
-        Debug.Log($"ChangeMoveDirection ¡ú _dir = {_dir}");
+        //Debug.Log($"ChangeMoveDirection ¡ú _dir = {_dir}");
     }
 
     

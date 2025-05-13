@@ -17,8 +17,13 @@ public class PlayerMovement : MonoBehaviour
         _gridObj = GetComponent<GridObject>();
         _player = GetComponent<Player>();
         // 初始吸附到当前格的中心
+    }
+
+    private void Start()
+    {
         _targetWorldPos = Grid.Instance.GridToWorldPosition(_gridObj.gridPosition);
         transform.position = _targetWorldPos;
+
     }
 
     private void Update()
@@ -54,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
   
 
         if (!IsInputMove()){ dir = 0; }
-        Debug.Log($"CheckMoveDirection → dir = {dir}");
+        //Debug.Log($"CheckMoveDirection → dir = {dir}");
         return dir;
     }
 

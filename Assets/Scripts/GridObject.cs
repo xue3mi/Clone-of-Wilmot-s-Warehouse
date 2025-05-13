@@ -22,15 +22,15 @@ public class GridObject : MonoBehaviour
         myRigidBody = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
         _normalColor = _sr.color;
-        InitializeBlock();
-        
+
     }
 
    
 
     void Start()
     {
-            
+        InitializeBlock();
+
     }
 
     // automatic update if coordinate changed
@@ -38,22 +38,24 @@ public class GridObject : MonoBehaviour
     {
         //ËæÊ±update grid cord
         Vector2Int current_grid_cord = Grid.Instance.WorldToGridPosition(transform.position);
-
+        gridPosition = current_grid_cord;
+        Debug.Log("is_moving" + is_moving);
         switch (is_moving)
         {
             case true:
-
+                Debug.Log("is_moving turned to true");
                 break;
             case false:
+                Debug.Log("is_moving turned to false");
 
-                if (current_grid_cord != lastPosition)
-                {
-                    GridSnap();                   
-                    gridPosition = current_grid_cord;
+                //if (current_grid_cord != lastPosition)
+                //{
+                GridSnap();                   
+                   // gridPosition = current_grid_cord;
                     //last position should be updated only when changed to idle;
-                    lastPosition = current_grid_cord;
+                   // lastPosition = current_grid_cord;
                     Grid.Instance.UpdateGridObject(this);
-                }
+               // }
              
             break;
         }
@@ -63,7 +65,7 @@ public class GridObject : MonoBehaviour
         Vector2 myWorldPos = transform.position;
         gridPosition = Grid.Instance.WorldToGridPosition(myWorldPos);
         Grid.Instance.UpdateGridObject(this);
-        lastPosition = gridPosition;
+        
 
         myWorldPos = Grid.Instance.GridToWorldPosition(gridPosition);
        
@@ -85,19 +87,14 @@ public class GridObject : MonoBehaviour
     }
     public void GridSnap()
     {
-        //transform coordinat to grid coordinates
-        lastPosition = gridPosition;
-
-        Vector2Int _newGridPos = Grid.Instance.WorldToGridPosition(new Vector2(transform.position.x, transform.position.y));
+        //transform coordinat to grid coordinates       
+        Vector2Int _newGridPos = Grid.Instance.WorldToGridPosition(transform.position);
         
-
         //transform gridpos to worldpos
-
         Vector3 _newWorldPos = Grid.Instance.GridToWorldPosition(_newGridPos);
 
         transform.position = _newWorldPos;
-
-        // object coordinate (x, y)
+        Debug.Log("GridSnap() triggered");
     }
 }
 
