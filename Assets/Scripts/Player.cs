@@ -23,7 +23,13 @@ public class Player : MonoBehaviour
     private Vector2 current_velocity;
     //smoothdamp
     private float _smoothTime = 0.1f;
-    
+
+
+    [Header("Åö×²¼ì²â²ã")]
+    [SerializeField] private LayerMask obstacleLayer;
+    private BoxCollider2D _col;
+    private GroupMover _groupMover;
+
     //use eum to limit direction to only four
     private enum _moveDir
     {
@@ -40,6 +46,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        _col = GetComponent<BoxCollider2D>();
+        _groupMover = GetComponent<GroupMover>();
         myPlayerMovement = GetComponent<PlayerMovement>();
         myGridObject = GetComponent<GridObject>();
         myRigidbody = GetComponent<Rigidbody2D>();

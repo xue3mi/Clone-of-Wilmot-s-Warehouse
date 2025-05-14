@@ -31,7 +31,7 @@ public class Grid : MonoBehaviour
         Instance = this;
 
         // 如果你想自动抓第一个方块的尺寸：
-        var anyBlock = FindObjectOfType<GridObject>();
+        var anyBlock = FindFirstObjectByType<GridObject>();
         if (anyBlock != null)
         {
             var sr = anyBlock.GetComponent<SpriteRenderer>();
